@@ -1,0 +1,52 @@
+name: SFTP Deployment to IONOS
+
+on:
+  push:
+    branches:
+      - main  # Change this to your deployment branch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Install SSH Client
+        run: sudo apt-get install -y openssh-client lftp sshpass
+
+      - name: Deploy Only Modified Files to IONOS via SFTP
+        env:
+          SFTP_HOST: ${{ secrets.IONOS_FTP_HOST }}
+          SFTP_USER: ${{ secrets.IONOS_FTP_USERNAME }}
+          SFTP_PASS: ${{ secrets.IONOS_FTP_PASSWORD }}
+          REMOTE_PATH: "/var/www/html/rawdahmadrasah.uk/"
+        run: |
+          lftp -c "open -u $SFTP_USER,$SFTP_PASS -e 'set sftp:auto-confirm yes; mirror -R --parallel=10 --only-newer --verbose --ignore-time --exclude .git/ ./ $REMOTE_PATH; bye' sftp://$SFTP_HOST"
+
+      - name: 📦 Run Composer Install via SSH
+        env:
+          SSH_HOST: ${{ secrets.IONOS_FTP_HOST }}
+          SSH_USER: ${{ secrets.IONOS_FTP_USERNAME }}
+          SSH_PASS: ${{ secrets.IONOS_FTP_PASSWORD }}
+          SSH_PORT: "22"  # Modify if using a different port
+          REMOTE_PATH: "/var/www/html/rawdahmadrasah.uk/"
+        run: |
+          echo "📦 Connecting to Server to Run Composer Install..."
+
+          sshpass -p "$SSH_PASS" ssh -o StrictHostKeyChecking=no -p $SSH_PORT $SSH_USER@$SSH_HOST "
+          cd $REMOTE_PATH && 
+          if [ ! -d vendor ]; then
+            echo '📦 Running Composer Install...';
+            composer install --no-dev --optimize-autoloader
+          else
+            echo '✅ Vendor folder exists, skipping composer install'
+          fi"
+
+          if [ $? -eq 0 ]; then
+            echo "✅ Composer Install Completed Successfully!"
+          else
+            echo "❌ Composer Install Failed!" >&2
+            exit 1
+          fi
