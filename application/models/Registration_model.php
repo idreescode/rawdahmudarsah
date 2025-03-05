@@ -14,12 +14,15 @@ class Registration_model extends CI_Model
         // print_r($data);exit;
         $result = $this->db->insert('online_admissions', $data);
         return $this->db->last_query();
-// exit;
-        // if ($result) {
-        //     return true;
-        // } else {
-        //     return false;
-        // }
+
+    }
+
+    public function add_parent($data)
+    {
+        // echo"<pre>";
+        // print_r($data);exit;
+        $result = $this->db->insert('parents', $data);
+        return $this->db->last_query();
     }
     
 

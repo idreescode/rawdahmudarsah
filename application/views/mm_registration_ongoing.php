@@ -143,7 +143,8 @@
                              <!-- for local -->
                                     <!-- <input type="hidden" id="class-one" name="class_ids" value="9" checked /> --> 
                             <!-- for live -->
-                                    <input type="hidden" id="class-one" name="class_ids" value="10" checked />
+                                    <input type="hidden" id="class-one" name="class_id" value="1" checked />
+                                    <input type="hidden"  name="section_id" value="1" checked />
                                     
                             
                         
@@ -227,6 +228,25 @@
 
                                     </div>
 
+                                    <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label class="form-label">Email*</label>
+
+                                                    <input type="text" class="form-control" name="child_email" placeholder="Enter child email*" required>
+
+                                                </div>
+
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label class="form-label">Phone number</label>
+
+                                                    <input type="text" class="form-control" name="child_phone_number" placeholder="Enter child phone number">
+
+                                                </div>
+
+                                            </div>
+
                                     <div class="col-12">
                                         <h6 class="form-section-sub-title">Address*</h6>
                                     </div>
@@ -278,10 +298,10 @@
                                         <div class="form-group">
                                             <label class="form-label">Gender</label>
                                             <select class="form-select" aria-label="Default" name="Gender">
-                                                <option selected value="Male">
+                                                <option selected value="1">
                                                     Male
                                                 </option>
-                                                <option value="Female">
+                                                <option value="2">
                                                     Female
                                                 </option>
                                                 <!-- <option value="Other">
@@ -886,11 +906,11 @@
                                     <div class="col-md-12">
                                         <div class="form-group">
                                             <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" name="sibling_attending" id="sibling_attendingYes" value="Yes">
+                                                <input class="form-check-input" type="radio" name="sibling_attending" id="sibling_attendingYes" value="1">
                                                 <label class="form-check-label" for="sibling_attendingYes"><small>Yes</small></label>
                                             </div>
                                             <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" name="sibling_attending" id="sibling_attendingNo" checked value="No">
+                                                <input class="form-check-input" type="radio" name="sibling_attending" id="sibling_attendingNo" checked value="0">
                                                 <label class="form-check-label" for="sibling_attendingNo"><small>No</small></label>
                                             </div>
 
@@ -1003,7 +1023,7 @@
                                         <div style="display:flex; margin:auto;">
                                             <!-- <p class="text-danger">Please fill the captcha*</p> -->
                                             <!-- <div class="g-recaptcha"style="display:flex; margin:auto;" data-sitekey="6Ldx_bspAAAAAIZvuUma-ifE97wkDwnxvU17x_lw"></div> -->
-                                            <div class="g-recaptcha" style="display:flex; margin:auto;" data-sitekey="6LfOBdUpAAAAADp7CJoC1HIf6OTauJlLs19vCFC_"></div>
+                                            <div class="g-recaptcha" style="display:flex; margin:auto;" data-sitekey="6LfQsOoqAAAAAIKTEZn-s-7veA3WtJc9z2ercGzS"></div>
                                         </div>
 
                                     </div>

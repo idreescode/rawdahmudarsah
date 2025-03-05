@@ -6,10 +6,14 @@ class Home extends CI_Controller
     public function __construct()
     {
         parent::__construct();
+        $this->load->library('session');
+        $this->load->helper('url');
         $this->load->helper('form');
         $this->load->library('form_validation');
-        $this->load->library('email');
+        $this->load->model('Registration_model');
+        $this->load->model('User_model');
     }
+
     public function index()
     {
         $this->load->view('header');
@@ -85,7 +89,7 @@ class Home extends CI_Controller
     }
     public function mm_registration_ongoing()
     {
-        
+
         $this->load->view('header');
         $this->load->view('mm_registration_ongoing');
         $this->load->view('footer');
@@ -98,7 +102,7 @@ class Home extends CI_Controller
     }
     public function fh_registration_ongoing()
     {
-        
+
         $this->load->view('header');
         $this->load->view('fh_registration_ongoing');
         $this->load->view('footer');
@@ -139,7 +143,7 @@ class Home extends CI_Controller
         $inputs = $this->input->post();
 
 
-        $recaptcha_secret = "6LfOBdUpAAAAAGDZ-EP_9ERtbCGcyprWr2Bq7yDz";
+        $recaptcha_secret = "6LfQsOoqAAAAADO5tLrUVSHoVl0UK5rrJP-VOIhj";
         $response = $_POST['g-recaptcha-response'];
         $remoteip = $_SERVER['REMOTE_ADDR'];
         $url = "https://www.google.com/recaptcha/api/siteverify?secret=$recaptcha_secret&response=$response&remoteip=$remoteip";
@@ -201,7 +205,7 @@ class Home extends CI_Controller
         $this->load->model('Contact_queries_model');
 
         $inputs = $this->input->post();
-        $recaptcha_secret = "6LfOBdUpAAAAAGDZ-EP_9ERtbCGcyprWr2Bq7yDz";
+        $recaptcha_secret = "6LfQsOoqAAAAADO5tLrUVSHoVl0UK5rrJP-VOIhj";
         $response = $_POST['g-recaptcha-response'];
         $remoteip = $_SERVER['REMOTE_ADDR'];
         $url = "https://www.google.com/recaptcha/api/siteverify?secret=$recaptcha_secret&response=$response&remoteip=$remoteip";
@@ -222,12 +226,12 @@ class Home extends CI_Controller
             }
         }
         $contactData = [
-            'first_name'=>$inputs['firstName'],
-            'last_name'=>$inputs['lastName'],
-            'email'=>$inputs['email'],
-            'phone_number'=>$inputs['phoneNumber'],
-            'message'=>$inputs['message'],
-            'class'=>$inputs['className'],
+            'first_name' => $inputs['firstName'],
+            'last_name' => $inputs['lastName'],
+            'email' => $inputs['email'],
+            'phone_number' => $inputs['phoneNumber'],
+            'message' => $inputs['message'],
+            'class' => $inputs['className'],
         ];
         $this->Contact_queries_model->add($contactData);
 
@@ -283,7 +287,7 @@ class Home extends CI_Controller
         // echo"<pre>";
         // print_r($inputs);exit;
 
-        $recaptcha_secret = "6LfOBdUpAAAAAGDZ-EP_9ERtbCGcyprWr2Bq7yDz";
+        $recaptcha_secret = "6LfQsOoqAAAAADO5tLrUVSHoVl0UK5rrJP-VOIhj";
         $response = $_POST['g-recaptcha-response'];
         $remoteip = $_SERVER['REMOTE_ADDR'];
         $url = "https://www.google.com/recaptcha/api/siteverify?secret=$recaptcha_secret&response=$response&remoteip=$remoteip";
@@ -310,6 +314,7 @@ class Home extends CI_Controller
             'ArabicLevels',
             'ChildForename',
             'ChildLegalSurname',
+            'child_email',
             'ChildAddress',
             'ChildCity',
             'ChildPostCode',
@@ -343,9 +348,9 @@ class Home extends CI_Controller
                 $emptyFields[] = $field;
             }
         }
-        
-        
-        
+
+
+
 
         if (!empty($emptyFields)) {
             $response = [
@@ -364,17 +369,18 @@ class Home extends CI_Controller
             'doctorTelephone' => 'Doctor Telephone',
             'emergencycontact' => 'Emergency Contact',
             'Guardian1_workTel' => 'Guardian 1 Work Telephone',
-            'Guardian2_workTel' => 'Guardian 2 Work Telephone'
+            'Guardian2_workTel' => 'Guardian 2 Work Telephone',
+            'child_phone_number' => 'child phone number'
         ];
-        
+
         $invalidContactMessages = [];
-        
+
         foreach ($contactFields as $field => $label) {
             if (!empty($inputs[$field]) && strlen($inputs[$field]) !== 11) {
                 $invalidContactMessages[] = "$label must be exactly 11 characters.";
             }
         }
-        
+
         if (!empty($invalidContactMessages)) {
             $response = [
                 'success' => false,
@@ -383,239 +389,176 @@ class Home extends CI_Controller
             echo json_encode($response);
             return;
         }
-        
-        
-
-       
-        
 
 
-        $data = array(
-            'arabic_level' => $this->input->post('ArabicLevels'),
-            'student_current_address' => $this->input->post('ChildAddress'),
-            'child_surname' => $this->input->post('ChildLegalSurname'),
-            'child_forename' => $this->input->post('Child_Pref_Forename'),
-            'firstname' => $this->input->post('ChildForename'),
-            'middlename' => $this->input->post('ChildMiddleName'),
-            // 'child_surname' => $this->input->post('ChildLegalSurname'),
-            'lastname' => $this->input->post('ChildLegalSurname'),
-            'current_address' => $this->input->post('ChildAddress'),
-            'city' => $this->input->post('ChildCity'),
-            'child_postalcode' => $this->input->post('ChildPostCode'),
-            'dob' => date('y/m/d', strtotime($this->input->post('ChildDOB'))),
-            'gender' => $this->input->post('Gender'),
-            // 'child_passport' => $this->input->post('whichPassport'),
-            // 'passport_description' => $this->input->post('ChildOtherPassport'),
-            // 'child_hobbies' => $this->input->post('ChildHobbies'),
-            'is_disability' => $this->input->post('disability'),
-            'disability_details' => $this->input->post('disabilityDetails'),
-            'is_alergic' => $this->input->post('medicalConditions'),
-            'alergy_details' => $this->input->post('medicalConditionsInfo'),
-            'addtional_information' => $this->input->post('OtherInfo'),
-            'doctor_name' => $this->input->post('DoctorName'),
-            'doctor_address' => $this->input->post('DoctorAddress'),
-            'doctor_city' => $this->input->post('DoctorCity'),
-            'doctor_postal' => $this->input->post('DoctorPostcode'),
-            'doctor_telephone' => $this->input->post('doctorTelephone'),
-            'entry_year' => $this->input->post('proposedYear'),
-            'current_school_year' => $this->input->post('CurrentYear'),
-            'father_title' => $this->input->post('Guardian1_Title'),
-            'father_name' => $this->input->post('Guardian1_fname') . ' ' . $this->input->post('Guardian1_mname') . ' ' . $this->input->post('Guardian1_sname'),
-            'father_address' => $this->input->post('Guardian1_address'),
-            'father_city' => $this->input->post('Guardian1_City'),
-            'father_potal_code' => $this->input->post('Guardian1_postcode'),
-            'father_home_telephone' => $this->input->post('Guardian1_telephone'),
-            'father_phone' => $this->input->post('Guardian1_telephone'),
-            'father_work_phone' => $this->input->post('Guardian1_mobile'),
-            'father_mobile_telephone' => $this->input->post('Guardian1_workTel'),
-            'father_email' => $this->input->post('Guardian1_email'),
-            'father_occupation' => $this->input->post('Guardian1_occupation'),
+        $existingStudent = $this->User_model->get_user_by_phone($inputs['child_phone_number']);
 
-            'guardian_is' => $this->input->post('Guardian1_relation'),
-            'guardian_name' => $this->input->post('Guardian1_fname') . ' ' . $this->input->post('Guardian1_mname') . ' ' . $this->input->post('Guardian1_sname'),
-            'guardian_relation' => $this->input->post('Guardian1_relation'),
-            'guardian_email' => $this->input->post('Guardian1_email'),
-            'guardian_phone' => $this->input->post('Guardian1_telephone'),
-            'guardian_occupation' => $this->input->post('Guardian1_occupation'),
-            'guardian_address' => $this->input->post('Guardian1_address'),
-            
-            'mother_title' => $this->input->post('Guardian2_Title'),
-            'mother_name' => $this->input->post('Guardian2_fname') . ' ' . $this->input->post('Guardian2_mname') . ' ' . $this->input->post('Guardian2_sname'),
-            'mother_address' => $this->input->post('Guardian2_address'),
-            'mother_city' => $this->input->post('Guardian2_City'),
-            'mother_potal_code' => $this->input->post('Guardian2_postcode'),
-            'mother_home_telephone' => $this->input->post('Guardian2_telephone'),
-            'mother_phone' => $this->input->post('Guardian2_telephone'),
-            'mother_work_phone' => $this->input->post('Guardian2_mobile'),
-            'mother_mobile_telephone' => $this->input->post('Guardian2_workTel'),
-            'mother_email' => $this->input->post('Guardian2_email'),
-            'mother_occupation' => $this->input->post('Guardian2_occupation'),
-            'sibling_name' => $this->input->post('siblingName'),
-            'sibling_school' => $this->input->post('presentSchool'),
-            'sibling_teacher' => $this->input->post('presentSchool_headteacher'),
-            'sibling_address' => $this->input->post('Sibling_address'),
-            'sibling_city' => $this->input->post('Sibling_city'),
-            'sibling_postalcode' => $this->input->post('Sibling_postcode'),
-            'payment_method' => $this->input->post('payMethod'),
-            'class_section_id' => 1,
-            'ethnicity' => $this->input->post('Ethnicity'),
-            'invoice_to' => $this->input->post('invoice_to'),
-            'sibling_attending' => $this->input->post('sibling_attending'),
-            'siblings_detail' => $this->input->post('siblings_detail'),
-            'homeschooled' => $this->input->post('homeschooled'),
-            'emergencyforename' => $this->input->post('emergencyforename'),
-            'emergencysurname' => $this->input->post('emergencysurname'),
-            'emergencycontact' => $this->input->post('emergencycontact'),
-            'emergencyemail' => $this->input->post('emergencyemail'),
-            'termsandconditions_check' => $this->input->post('termsandconditions_check'),
-            'photos_permission_check' => $this->input->post('photos_permission_check'),
-        );
+        if ($existingStudent) {
+            echo json_encode([
+                'success' => false,
+                'message' => 'Student already exists with the given phone number.'
+            ]);
+            return;
+        }
+        $existingStudentemail = $this->User_model->get_user_by_email($inputs['child_email']);
 
-        // if($this->input->post('Guardian1_Title') == 'Mr.'){
-        //     $data['father_title'] = $this->input->post('Guardian1_Title');
-        //     $data['father_name'] = $this->input->post('Guardian1_sname') . ' ' . $this->input->post('Guardian1_fname') . ' ' . $this->input->post('Guardian1_mname');
-        //     if($this->input->post('parent1adresscheck') && $this->input->post('parent1adresscheck') == 'on')
-        // {
-        //     $data['father_address'] = $this->input->post('ChildAddress');
-        //     $data['father_city'] = $this->input->post('ChildCity');
-        //     $data['father_potal_code'] = $this->input->post('ChildPostCode');
-        // }
-        // else{
-        //     $data['father_address'] = $this->input->post('Guardian1_address');
-        //     $data['father_city'] = $this->input->post('Guardian1_City');
-        //     $data['father_potal_code'] = $this->input->post('Guardian1_postcode');
-        // }
-        // if($this->input->post('parent2adresscheck') && $this->input->post('parent2adresscheck') == 'on')
-        // {
-        //     $data['mother_address'] = $this->input->post('ChildAddress');
-        //     $data['mother_city'] = $this->input->post('ChildCity');
-        //     $data['mother_potal_code'] = $this->input->post('ChildPostCode');
-        // }
-        // else{
-        //     $data['mother_address'] = $this->input->post('Guardian2_address');
-        //     $data['mother_city'] = $this->input->post('Guardian2_City');
-        //     $data['mother_potal_code'] = $this->input->post('Guardian2_postcode');
-        // }
-           
-        //     $data['father_home_telephone'] = $this->input->post('Guardian1_telephone');
-        //     $data['father_work_phone'] = $this->input->post('Guardian1_mobile');
-        //     $data['father_mobile_telephone'] = $this->input->post('Guardian1_workTel');
-        //     $data['father_phone'] = $this->input->post('Guardian1_telephone');
-        //     $data['father_email'] = $this->input->post('Guardian1_email');
-        //     $data['father_occupation'] = $this->input->post('Guardian1_occupation');
-        //     $data['mother_title'] = $this->input->post('Guardian2_Title');
-        //     $data['mother_name'] = $this->input->post('Guardian2_sname') . ' ' . $this->input->post('Guardian2_fname') . ' ' . $this->input->post('Guardian2_mname');
-           
-        //     $data['mother_home_telephone'] = $this->input->post('Guardian2_telephone');
-        //     $data['mother_phone'] = $this->input->post('Guardian2_telephone');
-        //     $data['mother_work_phone'] = $this->input->post('Guardian2_mobile');
-        //     $data['mother_mobile_telephone'] = $this->input->post('Guardian2_workTel');
-        //     $data['mother_email'] = $this->input->post('Guardian2_email');
-        //     $data['mother_occupation'] = $this->input->post('Guardian2_occupation');
-
-        //     $data['guardian_is'] = 'father';
-        //     $data['guardian_name'] = $this->input->post('Guardian1_sname') . ' ' . $this->input->post('Guardian1_fname') . ' ' . $this->input->post('Guardian1_mname');
-        //     $data['guardian_relation'] = 'Father';
-        //     $data['guardian_email'] = $this->input->post('Guardian1_email');
-        //     $data['guardian_phone'] = $this->input->post('Guardian1_telephone');
-        //     $data['guardian_occupation'] = $this->input->post('Guardian1_occupation');
-        //     $data['guardian_address'] = $this->input->post('Guardian1_address');
-        // }
-        // else{
-        //     $data['father_title'] = $this->input->post('Guardian2_Title');
-        //     $data['father_name'] = $this->input->post('Guardian2_sname') . ' ' . $this->input->post('Guardian2_fname') . ' ' . $this->input->post('Guardian2_mname');
-        //     // $data['father_address'] = $this->input->post('Guardian2_address');
-        //     // $data['father_city'] = $this->input->post('Guardian2_City');
-        //     // $data['father_potal_code'] = $this->input->post('Guardian2_postcode');
-        //     $data['father_home_telephone'] = $this->input->post('Guardian2_telephone');
-        //     $data['father_phone'] = $this->input->post('Guardian2_telephone');
-        //     $data['father_work_phone'] = $this->input->post('Guardian2_mobile');
-        //     $data['father_mobile_telephone'] = $this->input->post('Guardian2_workTel');
-        //     $data['father_email'] = $this->input->post('Guardian2_email');
-        //     $data['father_occupation'] = $this->input->post('Guardian2_occupation');
-        //     $data['mother_title'] = $this->input->post('Guardian1_Title');
-        //     $data['mother_name'] = $this->input->post('Guardian1_sname') . ' ' . $this->input->post('Guardian1_fname') . ' ' . $this->input->post('Guardian1_mname');
-        //     // $data['mother_address'] = $this->input->post('Guardian1_address');
-        //     // $data['mother_city'] = $this->input->post('Guardian1_City');
-        //     // $data['mother_potal_code'] = $this->input->post('Guardian1_postcode');
-        //     $data['mother_home_telephone'] = $this->input->post('Guardian1_telephone');
-        //     $data['mother_phone'] = $this->input->post('Guardian1_telephone');
-        //     $data['mother_work_phone'] = $this->input->post('Guardian1_mobile');
-        //     $data['mother_mobile_telephone'] = $this->input->post('Guardian1_workTel');
-        //     $data['mother_email'] = $this->input->post('Guardian1_email');
-        //     $data['mother_occupation'] = $this->input->post('Guardian1_occupation');
-
-        //     $data['guardian_is'] = 'mother';
-        //     $data['guardian_name'] = $this->input->post('Guardian2_sname') . ' ' . $this->input->post('Guardian2_fname') . ' ' . $this->input->post('Guardian2_mname');
-        //     $data['guardian_relation'] = 'Mother';
-        //     $data['guardian_email'] = $this->input->post('Guardian2_email');
-        //     $data['guardian_phone'] = $this->input->post('Guardian2_telephone');
-        //     $data['guardian_occupation'] = $this->input->post('Guardian2_occupation');
-        //     $data['guardian_address'] = $this->input->post('Guardian2_address');
-
-
-        //     if($this->input->post('parent1adresscheck') && $this->input->post('parent1adresscheck') == 'on')
-        //     {
-        //         $data['father_address'] = $this->input->post('ChildAddress');
-        //         $data['father_city'] = $this->input->post('ChildCity');
-        //         $data['father_potal_code'] = $this->input->post('ChildPostCode');
-        //     }
-        //     else{
-        //         $data['father_address'] = $this->input->post('Guardian2_address');
-        //         $data['father_city'] = $this->input->post('Guardian2_City');
-        //         $data['father_potal_code'] = $this->input->post('Guardian2_postcode');
-        //     }
-        //     if($this->input->post('parent2adresscheck') && $this->input->post('parent2adresscheck') == 'on')
-        //     {
-        //         $data['mother_address'] = $this->input->post('ChildAddress');
-        //         $data['mother_city'] = $this->input->post('ChildCity');
-        //         $data['mother_potal_code'] = $this->input->post('ChildPostCode');
-        //     }
-        //     else{
-        //         $data['mother_address'] = $this->input->post('Guardian1_address');
-        //         $data['mother_city'] = $this->input->post('Guardian1_City');
-        //         $data['mother_potal_code'] = $this->input->post('Guardian1_postcode');
-        //     }
-           
-
-        // }
-        $data['BJJcheck'] = $this->input->post('BJJcheck');
-        $data['childMadrassah'] = $this->input->post('childMadrassah');
-        $data['childMadrassahDetails'] = $this->input->post('childMadrassahDetails');
-        $data['courseenrolled'] = $this->input->post('courseenrolled');
-        $data['hearabout'] = $this->input->post('hearabout');
-        $data['heardetails'] = $this->input->post('heardetails');
-        $data['is_singleparent'] = $this->input->post('singleparentcheck');
-
-
-        $class_id = $this->input->post('class_ids');
-
-        // 5 for mm age 7, 6 for mm ongoing / returning  and 7 for fh age 7, 8 for fh ongoing / returning
-        // if ($class_id == 5) {
-        //     $data['class_section_id'] = 18;
-        // } else if($class_id == 9){
-        //     $data['class_section_id'] = 28;
-        // }else if($class_id == 6){
-        //     $data['class_section_id'] = 19;
-        // }else {
-        //     $data['class_section_id'] = 27;
-        // }
-
-        if ($class_id == 10) {
-            $data['class_section_id'] = 31;
-        } else if($class_id == 11){
-            $data['class_section_id'] = 32;
-        }else if($class_id == 12){
-            $data['class_section_id'] = 33;
-        }else {
-            $data['class_section_id'] = 34;
+        if ($existingStudentemail) {
+            echo json_encode([
+                'success' => false,
+                'message' => 'Student already exists with the given email.'
+            ]);
+            return;
         }
 
 
 
-        $insert = $this->Registration_model->add($data);
 
-        if ($insert) {
+
+
+
+
+
+
+        $studentUser = array(
+            'role_id' => 2,
+            'full_name' => $this->input->post('ChildForename') . ' ' . $this->input->post('ChildMiddleName') . ' ' . $this->input->post('ChildLegalSurname'),
+            'username' => $this->input->post('child_phone_number') ?: ($this->input->post('child_email')),
+            'email' => $this->input->post('child_email'),
+            'phone_number' => $this->input->post('child_phone_number'),
+            'password' => password_hash('123456', PASSWORD_BCRYPT),
+        );
+
+        $guardianUser = array(
+            'role_id' => 3,
+            'full_name' => $this->input->post('Guardian1_email') != '' ? $this->input->post('Guardian1_fname') . ' ' . $this->input->post('Guardian1_mname') . ' ' . $this->input->post('Guardian1_sname')  : $this->input->post('Guardian2_fname') . ' ' . $this->input->post('Guardian2_mname') . ' ' . $this->input->post('Guardian2_sname'),
+            'username' => $this->input->post('Guardian1_email') != '' ? $this->input->post('Guardian1_email') : $this->input->post('Guardian2_email'),
+            'email' => $this->input->post('Guardian1_email') != '' ? $this->input->post('Guardian1_email') : $this->input->post('Guardian2_email'),
+            'phone_number' => $this->input->post('Guardian1_email') != '' ? $this->input->post('Guardian1_mobile') : $this->input->post('Guardian2_mobile'),
+            'password' => password_hash('123456', PASSWORD_BCRYPT),
+        );
+
+        $student_user = $this->User_model->insert_student_user($studentUser);
+        $guardian_user = $this->User_model->insert_guardian_user($guardianUser);
+
+        $parentsData = array(
+            // 'father_title' => $this->input->post('Guardian1_Title'),
+            'fathers_name' => $this->input->post('Guardian1_fname'),
+            'fathers_middle_name' => $this->input->post('Guardian1_mname'),
+            'fathers_surname' => $this->input->post('Guardian1_sname'),
+            'father_address' => $this->input->post('Guardian1_address'),
+            'father_city' => $this->input->post('Guardian1_City'),
+            'father_postcode' => $this->input->post('Guardian1_postcode'),
+            'father_home_telephone' => $this->input->post('Guardian1_telephone'),
+            'fathers_mobile' => $this->input->post('Guardian1_mobile'),
+            'father_work_telephone' => $this->input->post('Guardian1_workTel'),
+            'father_email' => $this->input->post('Guardian1_email'),
+            'fathers_occupation' => $this->input->post('Guardian1_occupation'),
+
+
+            // 'mother_title' => $this->input->post('Guardian2_Title'),
+            'mothers_name' => $this->input->post('Guardian2_fname'),
+            'mothers_middle_name' => $this->input->post('Guardian2_mname'),
+            'mothers_surname' => $this->input->post('Guardian2_sname'),
+            'mother_address' => $this->input->post('Guardian2_address'),
+            'mother_city' => $this->input->post('Guardian2_City'),
+            'mother_postcode' => $this->input->post('Guardian2_postcode'),
+            'mother_home_telephone' => $this->input->post('Guardian2_telephone'),
+            'mothers_mobile' => $this->input->post('Guardian2_mobile'),
+            'mother_work_telephone' => $this->input->post('Guardian2_workTel'),
+            'mother_email' => $this->input->post('Guardian2_email'),
+            'mothers_occupation' => $this->input->post('Guardian2_occupation'),
+
+            'relation' => $this->input->post('Guardian1_email') != '' ? 'F' : 'M',
+            'guardians_relation' => $this->input->post('Guardian1_email') != '' ? 'Father' : 'Mother',
+            'guardians_name' => $this->input->post('Guardian1_email') != '' ? $this->input->post('Guardian1_fname') . ' ' . $this->input->post('Guardian1_mname') . ' ' . $this->input->post('Guardian1_sname')  : $this->input->post('Guardian2_fname') . ' ' . $this->input->post('Guardian2_mname') . ' ' . $this->input->post('Guardian2_sname'),
+            'guardians_email' => $this->input->post('Guardian1_email') != '' ? $this->input->post('Guardian1_email')  : $this->input->post('Guardian2_email'),
+            'guardians_mobile' => $this->input->post('Guardian1_email') != '' ? $this->input->post('Guardian1_mobile') : $this->input->post('Guardian2_mobile'),
+            'guardians_occupation' => $this->input->post('Guardian1_email') != '' ? $this->input->post('Guardian1_occupation') : $this->input->post('Guardian2_occupation'),
+            'guardians_address' => $this->input->post('Guardian1_email') != '' ? $this->input->post('Guardian1_address') : $this->input->post('Guardian2_address'),
+            'user_id' => $guardian_user,
+        );
+
+        $parents = $this->User_model->insert_parent_record($parentsData);
+
+        $childData = array(
+            'arabic_levels' => $this->input->post('ArabicLevels'),
+            'current_address' => $this->input->post('ChildAddress'),
+            'permanent_address' => $this->input->post('ChildAddress'),
+            'first_name' => $this->input->post('ChildForename'),
+            'middle_name' => $this->input->post('ChildMiddleName'),
+            'preferred_forename' => $this->input->post('Child_Pref_Forename'),
+            'last_name' => $this->input->post('ChildLegalSurname'),
+            'email' => $this->input->post('child_email'),
+            'mobile' => $this->input->post('child_phone_number'),
+            'city' => $this->input->post('ChildCity'),
+            'postcode' => $this->input->post('ChildPostCode'),
+            'date_of_birth' => date('y/m/d', strtotime($this->input->post('ChildDOB'))),
+            'gender_id' => $this->input->post('Gender'),
+            'disability' => $this->input->post('disability'),
+            'disabilities_details' => $this->input->post('disabilityDetails'),
+            'alergic' => $this->input->post('medicalConditions'),
+            'alergy_details' => $this->input->post('medicalConditionsInfo'),
+            'doctor_name' => $this->input->post('DoctorName'),
+            'doctor_address' => $this->input->post('DoctorAddress'),
+            'doctor_city' => $this->input->post('DoctorCity'),
+            'doctor_postcode' => $this->input->post('DoctorPostcode'),
+            'doctor_telephone' => $this->input->post('doctorTelephone'),
+            // 'entry_year' => $this->input->post('proposedYear'),
+            'child_school_year' => $this->input->post('CurrentYear'),
+
+
+            'emergency_contact_forename' => $this->input->post('emergencyforename'),
+            'emergency_contact_surname' => $this->input->post('emergencysurname'),
+            'emergency_contact_contact' => $this->input->post('emergencycontact'),
+            'emergency_contact_email' => $this->input->post('emergencyemail'),
+
+            'invoice_to' => $this->input->post('invoice_to'),
+
+            'has_sibling' => $this->input->post('sibling_attending'),
+
+            'sibling_detail' => $this->input->post('siblings_detail'),
+
+            'home_schooled' => $this->input->post('homeschooled'),
+            'previous_school_details' => $this->input->post('presentSchool'),
+            'head_teacher_name' => $this->input->post('presentSchool_headteacher'),
+            'previous_school_address' => $this->input->post('Sibling_address'),
+            'previous_school_city' => $this->input->post('Sibling_city'),
+            'previous_school_postcode' => $this->input->post('Sibling_postcode'),
+            'payment_method' => $this->input->post('payMethod'),
+            'caste' => $this->input->post('Ethnicity'),
+            'terms_conditions' => $this->input->post('termsandconditions_check'),
+            'photography_permission' => $this->input->post('photos_permission_check'),
+            'role_id' => '2',
+            'user_id' => $student_user,
+            'parent_id' => $parents
+        );
+
+
+        $childData['bjj_check'] = $this->input->post('BJJcheck');
+        $childData['attend_madrassah'] = $this->input->post('childMadrassah');
+        $childData['madrasah_detail'] = $this->input->post('childMadrassahDetails');
+        $childData['course_enrolled'] = $this->input->post('courseenrolled');
+        $childData['hear_about'] = $this->input->post('hearabout');
+        $childData['hear_about_details'] = $this->input->post('heardetails');
+
+        $student = $this->User_model->insert_student($childData);
+        
+
+        // add student record 
+
+        $studentRecordData = array(
+          'student_id' => $student,
+          'class_id' => $this->input->post('class_id') ?? Null,
+          'section_id' => $this->input->post('section_id')?? Null,
+          'is_default' => '1',
+          'active_status' => '1',
+          'academic_id' => '1'
+        );
+
+        $student_record  = $this->User_model->insert_student_record($studentRecordData);
+        
+
+        if ($student) {
             $post_data = $this->input->post();
             // $this->sendEmailRegistration($post_data);
             $data1['success'] = true;
@@ -842,9 +785,16 @@ class Home extends CI_Controller
         }
     }
 
-    public function termsandconditions(){
+    public function termsandconditions()
+    {
         $this->load->view('header');
         $this->load->view('termsandconditions');
         $this->load->view('footer');
     }
+
+
+
+    // new register function 
+
+
 }

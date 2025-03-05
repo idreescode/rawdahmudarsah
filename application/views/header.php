@@ -10,17 +10,17 @@
     <meta name="author" content="Zohir">
 
     <!-- Favicons -->
-    <link rel="icon" href="<?=base_url()?>assets/img/favicon.svg">
-    <link rel="apple-touch-icon" href="<?=base_url()?>assets/img/apple-touch-icon.svg">
+    <link rel="icon" href="assets/img/favicon.svg">
+    <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.svg">
 
     <!-- Vendor CSS Files -->
-    <link rel="stylesheet" href="<?=base_url()?>assets/vendor/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="<?=base_url()?>assets/vendor/bootstrap-icons/bootstrap-icons.css">
-    <link rel="stylesheet" href="<?=base_url()?>assets/vendor/fontawesome-free/css/all.min.css">
+    <link rel="stylesheet" href="assets/vendor/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/vendor/bootstrap-icons/bootstrap-icons.css">
+    <link rel="stylesheet" href="assets/vendor/fontawesome-free/css/all.min.css">
 
     <!-- Template Main CSS File -->
-    <link rel="stylesheet" href="<?=base_url()?>assets/css/style.css">
-    <link rel="stylesheet" href="<?=base_url()?>assets/css/responsive.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/responsive.css">
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/smoothness/jquery-ui.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js" integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css" integrity="sha512-3pIirOrwegjM6erE5gPSwkUzO+3cTjpnV9lexlNZqvupR64iZBnOOTiiLPb9M36zpMScbmUNIcHUqKD47M719g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -141,8 +141,8 @@
                                 </a>
                             </li> -->
                             
-                            <li class="nav-btn-item no-xsm"><a href="https://www.rawdah.cloud/site/login/" target="_blank" class="btn btn-primary btn-nav">Staff</a></li>
-                            <li class="nav-btn-item d-none"><a href="https://www.rawdah.cloud/site/userlogin/" target="_blank" class="btn btn-primary btn-nav">Parents/Students</a></li>
+                            <li class="nav-btn-item no-xsm"><a href="https://rawdah.cloud/site/login/" target="_blank" class="btn btn-primary btn-nav">Staff</a></li>                            
+                            <li class="nav-btn-item d-none"><a href="https://rawdah.cloud/site/userlogin/" target="_blank" class="btn btn-primary btn-nav">Parents/Students</a></li>
                         </ul>
                     </div>
                     <div class="hamburger">
