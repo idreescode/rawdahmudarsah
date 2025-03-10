@@ -627,7 +627,7 @@ li {
                                         </div>
                                         <div class="row">
                                         
-                                        <div class="g-recaptcha" data-sitekey="6LfQsOoqAAAAAIKTEZn-s-7veA3WtJc9z2ercGzS"></div>
+                                        <div class="g-recaptcha" data-sitekey="6LcSQfAqAAAAAABaFPevRxZatb_BQyvYDUlQlD-D"></div>
                                             <div class="col-12">
                                                 <button type="submit" class="btn btn-primary">Submit</button>
 
@@ -748,7 +748,7 @@ li {
                                         </div>
                                         <div class="row">
                                        
-                                        <div class="g-recaptcha" data-sitekey="6LfQsOoqAAAAAIKTEZn-s-7veA3WtJc9z2ercGzS"></div>
+                                        <div class="g-recaptcha" data-sitekey="6LcSQfAqAAAAAABaFPevRxZatb_BQyvYDUlQlD-D"></div>
                                             <div class="col-12">
                                                 <button type="submit" class="btn btn-primary">Submit</button>
                                             </div>
