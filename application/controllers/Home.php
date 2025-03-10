@@ -142,7 +142,6 @@ class Home extends CI_Controller
         $this->load->library('email');
         $inputs = $this->input->post();
 
-
         $recaptcha_secret = "6LfQsOoqAAAAADO5tLrUVSHoVl0UK5rrJP-VOIhj";
         $response = $_POST['g-recaptcha-response'];
         $remoteip = $_SERVER['REMOTE_ADDR'];
@@ -150,54 +149,85 @@ class Home extends CI_Controller
         $result = json_decode(file_get_contents($url));
 
         if (!$result->success) {
-            $errorCodes = $result->{'error-codes'};
-            if (in_array('invalid-input-response', $errorCodes)) {
-                $data['success'] = false;
-                $data['message'] = 'Recaptcha verification failed.';
-                echo json_encode($data);
-                return;
-            } else {
-                $data['success'] = false;
-                $data['message'] = 'Recaptcha verification failed.';
-                echo json_encode($data);
-                return;
-            }
+            $data['success'] = false;
+            $data['message'] = 'Recaptcha verification failed.';
+            echo json_encode($data);
+            return;
         }
-        $mail_body = '<p>Please find the details below:</p>
-        <table>
-            <tr> <td>Name</td> <td>' . $inputs['firstName'] . '</td>  </tr>
-            <tr> <td>Last Name</td> <td>' . $inputs['lastName'] . '</td>  </tr>
-            <tr> <td>Email</td> <td>' . $inputs['email'] . '</td>  </tr>
-            <tr> <td>Phone</td> <td>' . $inputs['phoneNumber'] . '</td>  </tr>
-            <tr> <td>Address</td> <td>' . $inputs['address'] . '</td>  </tr>
-            <tr> <td>Amount</td> <td>' . $inputs['zakahAmount'] . '</td>  </tr>
-        </table>';
 
+        $mail_body = '
+        <div style="font-family: Arial, sans-serif; color: #333;">
+            <h2 style="color: #0D6EFD;">Support Request Details</h2>
+            <p>Please find the details below:</p>
+            <table style="border-collapse: collapse; width: 100%;">
+                <tr style="background-color: #f2f2f2;">
+                    <th style="padding: 8px; text-align: left; border: 1px solid #ddd;">Field</th>
+                    <th style="padding: 8px; text-align: left; border: 1px solid #ddd;">Details</th>
+                </tr>
+                <tr>
+                    <td style="padding: 8px; border: 1px solid #ddd;">Name</td>
+                    <td style="padding: 8px; border: 1px solid #ddd;">' . htmlspecialchars($inputs['firstName']) . '</td>
+                </tr>
+                <tr>
+                    <td style="padding: 8px; border: 1px solid #ddd;">Last Name</td>
+                    <td style="padding: 8px; border: 1px solid #ddd;">' . htmlspecialchars($inputs['lastName']) . '</td>
+                </tr>
+                <tr>
+                    <td style="padding: 8px; border: 1px solid #ddd;">Email</td>
+                    <td style="padding: 8px; border: 1px solid #ddd;">' . htmlspecialchars($inputs['email']) . '</td>
+                </tr>
+                <tr>
+                    <td style="padding: 8px; border: 1px solid #ddd;">Phone</td>
+                    <td style="padding: 8px; border: 1px solid #ddd;">' . htmlspecialchars($inputs['phoneNumber']) . '</td>
+                </tr>
+                <tr>
+                    <td style="padding: 8px; border: 1px solid #ddd;">Address</td>
+                    <td style="padding: 8px; border: 1px solid #ddd;">' . htmlspecialchars($inputs['address']) . '</td>
+                </tr>
+                <tr>
+                    <td style="padding: 8px; border: 1px solid #ddd;">Amount</td>
+                    <td style="padding: 8px; border: 1px solid #ddd;">' . htmlspecialchars($inputs['zakahAmount']) . '</td>
+                </tr>
+            </table>
+            <br>
+            <p>Thank you for reaching out to us.</p>
+            <p><b>Regards,</b><br>The Rawdah Madrassah Team</p>
+        </div>';
         $toMail = 'rawda@greensvilletrust.org';
 
-        $this->email->from('no-reply@rawdah.cloud', 'Support Us - The Rawdah Madrassah');
+        // $this->email->from('no-reply@rawdah.cloud', 'Support Us - The Rawdah Madrassah');
+        $this->email->from('zaidkhurshid525@gmail.com', 'Support Us - The Rawdah Madrassah');
         $this->email->to($toMail);
+        // $this->email->to('zaidkhurshid525@gmail.com');
         $this->email->subject('Support Us, The Rawdah Madrassah');
         $this->email->message($mail_body);
 
-        // Send email
         if ($this->email->send()) {
-            $mail_body  = 'Thanks for reaching out Rawdah Madrasah. Your information submitted successfully.Our team will contact you soon.<br><br><br><br><br><br> <b>Regrards</b> <br> Rawḍah Team';
-            $this->email->from('no-reply@rawdah.cloud', 'Support Us - The Rawdah Madrassah');
+            $confirmation_body = '
+            <div style="font-family: Arial, sans-serif; color: #333;">
+                <h2 style="color: #0D6EFD;">Thank You for Contacting Us!</h2>
+                <p>Your information was submitted successfully. Our team will contact you soon.</p>
+                <br>
+                <p><b>Regards,</b><br>Rawḍah Team</p>
+            </div>';
 
+            // $this->email->from('no-reply@rawdah.cloud', 'Support Us - The Rawdah Madrassah');
+            $this->email->from('zaidkhurshid525@gmail.com', 'Support Us - The Rawdah Madrassah');
             $this->email->to($inputs['email']);
             $this->email->subject('Support Us, The Rawdah Madrassah');
-            $this->email->message($mail_body);
+            $this->email->message($confirmation_body);
             $this->email->send();
+
             $data['success'] = true;
             $data['message'] = 'Email sent successfully.';
         } else {
             $data['success'] = false;
-            $data['message'] = 'Failed to send email, please try again later';
+            $data['message'] = 'Failed to send email, please try again later.';
         }
 
         echo json_encode($data);
     }
+
 
     public function contactus()
     {
@@ -212,67 +242,87 @@ class Home extends CI_Controller
         $result = json_decode(file_get_contents($url));
 
         if (!$result->success) {
-            $errorCodes = $result->{'error-codes'};
-            if (in_array('invalid-input-response', $errorCodes)) {
-                $data['success'] = false;
-                $data['message'] = 'Recaptcha verification failed.';
-                echo json_encode($data);
-                return;
-            } else {
-                $data['success'] = false;
-                $data['message'] = 'Recaptcha verification failed.';
-                echo json_encode($data);
-                return;
-            }
+            $data['success'] = false;
+            $data['message'] = 'Recaptcha verification failed.';
+            echo json_encode($data);
+            return;
         }
+
         $contactData = [
             'first_name' => $inputs['firstName'],
             'last_name' => $inputs['lastName'],
             'email' => $inputs['email'],
-            'phone_number' => $inputs['phoneNumber'],
+            'phone' => $inputs['phoneNumber'],
             'message' => $inputs['message'],
             'class' => $inputs['className'],
         ];
         $this->Contact_queries_model->add($contactData);
 
-        $toMail = 'admin@rawdahmadrasah.co.uk';
-        if ($inputs['className'] == "mustafa") {
-            $toMail = 'info@rawdahmadrasah.co.uk';
-        } else {
+        // $toMail = ($inputs['className'] == "mustafa") ? 'info@rawdahmadrasah.co.uk' : 'rawda@greensvilletrust.org';
+        $toMail = 'zaidkhurshid525@gmail.com';
 
-            $toMail = 'rawda@greensvilletrust.org';
-        }
+        $mail_body = '
+        <div style="font-family: Arial, sans-serif; color: #333;">
+            <h2 style="color: #0D6EFD;">Contact Us - User Information</h2>
+            <p>Please see the following information about the user:</p>
+            <table style="border-collapse: collapse; width: 100%;">
+                <tr style="background-color: #f2f2f2;">
+                    <th style="padding: 8px; text-align: left; border: 1px solid #ddd;">Field</th>
+                    <th style="padding: 8px; text-align: left; border: 1px solid #ddd;">Details</th>
+                </tr>
+                <tr>
+                    <td style="padding: 8px; border: 1px solid #ddd;">Name</td>
+                    <td style="padding: 8px; border: 1px solid #ddd;">' . htmlspecialchars($inputs['firstName']) . ' ' . htmlspecialchars($inputs['lastName'] ?? "") . '</td>
+                </tr>
+                <tr>
+                    <td style="padding: 8px; border: 1px solid #ddd;">Email</td>
+                    <td style="padding: 8px; border: 1px solid #ddd;">' . htmlspecialchars($inputs['email']) . '</td>
+                </tr>
+                <tr>
+                    <td style="padding: 8px; border: 1px solid #ddd;">Telephone</td>
+                    <td style="padding: 8px; border: 1px solid #ddd;">' . htmlspecialchars($inputs['phoneNumber']) . '</td>
+                </tr>
+                <tr>
+                    <td style="padding: 8px; border: 1px solid #ddd;">Message</td>
+                    <td style="padding: 8px; border: 1px solid #ddd;">' . nl2br(htmlspecialchars($inputs['message'])) . '</td>
+                </tr>
+                <tr>
+                    <td style="padding: 8px; border: 1px solid #ddd;">Class</td>
+                    <td style="padding: 8px; border: 1px solid #ddd;">' . ($inputs['className'] == "mustafa" ? "Mustafa Mount" : "Felicity House") . '</td>
+                </tr>
+            </table>
+            <br>
+            <p>Thank you for contacting us.</p>
+            <p><b>Regards,</b><br>The Rawḍah Madrasah Team</p>
+        </div>';
 
-        $mail_body = '<p>Please see the following information about the user</p>
-                    <table>
-                        <tr> <td>Name</td> <td>' . $inputs['firstName'] . '  ' . ($inputs['lastName'] ?? "") . '</td>  </tr>
-                        <tr> <td>Email</td> <td>' . $inputs['email'] . '</td>  </tr>
-                        <tr> <td>Telephone</td> <td>' . $inputs['phoneNumber'] . '</td>  </tr>
-                        <tr> <td>Message</td> <td>' . $inputs['message'] . '</td>  </tr>
-                        <tr> <td>Class</td> <td>' . ($inputs['className'] == "mustafa" ? "Mustafa Mount" : "Felicity House") . '</td>  </tr>
-                    </table>
-                 ';
-
-
-        $this->email->from('no-reply@rawdah.cloud', 'Contact US - The Rawḍah Madrasah');
+        // $this->email->from('no-reply@rawdah.cloud', 'Contact US - The Rawḍah Madrasah');
+        $this->email->from('zaidkhurshid525@gmail.com', 'Contact US - The Rawḍah Madrasah');
         $this->email->to($toMail);
-        $this->email->subject('Contact us, Rawdah Madrassah');
+        $this->email->subject('Contact Us - Rawḍah Madrasah');
         $this->email->message($mail_body);
 
-        // Send email
         if ($this->email->send()) {
-            $mail_body  = 'Thanks for reaching out Rawada Madrasah. Your information submitted successfully. Our team will contact you soon.<br><br><br><br><br><br> <b>Regards</b> <br> Rawḍah Team';
-            $this->email->from('no-reply@rawdah.cloud', 'Contact US - The Rawḍah Madrasah');
+            $confirmation_body = '
+            <div style="font-family: Arial, sans-serif; color: #333;">
+                <h2 style="color: #0D6EFD;">Thank You for Contacting Us!</h2>
+                <p>Your information has been submitted successfully. Our team will contact you soon.</p>
+                <br>
+                <p><b>Regards,</b><br>Rawḍah Team</p>
+            </div>';
+
+            // $this->email->from('no-reply@rawdah.cloud', 'Contact US - The Rawḍah Madrasah');
+            $this->email->from('zaidkhurshid525@gmail.com', 'Contact US - The Rawḍah Madrasah');
             $this->email->to($inputs['email']);
-            $this->email->subject('Contact us, Rawdah Madrassah');
-            $this->email->message($mail_body);
+            $this->email->subject('Thank You for Contacting Us - Rawḍah Madrasah');
+            $this->email->message($confirmation_body);
             $this->email->send();
 
             $data['success'] = true;
             $data['message'] = 'Email sent successfully.';
         } else {
             $data['success'] = false;
-            $data['message'] = 'Failed to send email, please try again later';
+            $data['message'] = 'Failed to send email, please try again later.';
         }
 
         echo json_encode($data);
@@ -542,25 +592,29 @@ class Home extends CI_Controller
         $childData['hear_about_details'] = $this->input->post('heardetails');
 
         $student = $this->User_model->insert_student($childData);
-        
+
 
         // add student record 
 
         $studentRecordData = array(
-          'student_id' => $student,
-          'class_id' => $this->input->post('class_id') ?? Null,
-          'section_id' => $this->input->post('section_id')?? Null,
-          'is_default' => '1',
-          'active_status' => '1',
-          'academic_id' => '1'
+            'student_id' => $student,
+            'class_id' => $this->input->post('class_id') ?? Null,
+            'section_id' => $this->input->post('section_id') ?? Null,
+            'is_default' => '1',
+            'active_status' => '1',
+            'academic_id' => '1'
         );
 
         $student_record  = $this->User_model->insert_student_record($studentRecordData);
-        
+
 
         if ($student) {
             $post_data = $this->input->post();
-            // $this->sendEmailRegistration($post_data);
+            unset($post_data['singleparentcheck']);
+            unset($post_data['section_id']);
+            unset($post_data['parent1adresscheck']);
+            unset($post_data['parent2adresscheck']);
+            $this->sendEmailRegistration($post_data);
             $data1['success'] = true;
             $data1['message'] = 'Application Submitted Successfully';
         } else {
@@ -576,27 +630,30 @@ class Home extends CI_Controller
         $this->load->library('email');
         unset($postsdata['g-recaptcha-response']);
         $inputs = $postsdata;
+
         if ($inputs['class_ids'] == 5) {
-            $toMail = 'admin@rawdahmadrasah.co.uk';
+            // $toMail = 'admin@rawdahmadrasah.co.uk';
+            $toMail = 'zaidkhurshid525@gmail.com';
             $inputs['class_ids'] = 'Mustafa Mount';
         } else {
             $inputs['class_id'] = 'Felicity House';
-            $toMail = 'rawda@greensvilletrust.org';
+            // $toMail = 'rawda@greensvilletrust.org';
+            $toMail = 'zaidkhurshid525@gmail.com';
         }
-
-        if ($inputs['payMethod'] == '0') {
-            $inputs['payMethod'] == 'Full Payment after deposit';
-        } else if ($inputs['payMethod'] == '1') {
-            $inputs['payMethod'] == 'Two Installments after deposit';
+        if ($inputs['Gender'] == 1) {
+            $inputs['Gender'] = 'Male';
         } else {
-            $inputs['payMethod'] == 'Monthly Payments (Exceptional Grounds)';
+            $inputs['Gender'] = 'Female';
         }
 
+        $paymentMethods = [
+            '0' => 'Full Payment after deposit',
+            '1' => 'Two Installments after deposit',
+            '2' => 'Monthly Payments (Exceptional Grounds)'
+        ];
 
+        $inputs['payMethod'] = $paymentMethods[$inputs['payMethod']] ?? $inputs['payMethod'];
 
-
-
-        // Define a mapping of field names to labels
         $fieldLabels = [
             'ArabicLevels' => 'Arabic Level',
             'ChildAddress' => 'Child Address',
@@ -656,57 +713,65 @@ class Home extends CI_Controller
             'payMethod' => 'Payment Method',
             'class_ids' => 'Class',
             'class_id' => 'Class',
-            'Guardian1_workTel'  => 'Guardian 1 work telephone',
-            'Guardian2_workTel'  => 'Guardian 2 work telephone'
+            'Guardian1_workTel' => 'Guardian 1 Work Telephone',
+            'Guardian2_workTel' => 'Guardian 2 Work Telephone',
+            'child_email' => 'Child Email',
+            'child_phone_number' => 'Child Phone Number',
+            'siblings_attending' => 'Sibling Attending',
+            'invoice_to' => 'Invoice To',
+            'sibling_details' => 'Sibling Details',
+            'homeschooled' => 'Home Schooled',
+            'termsandconditions_check' => 'Terms and Conditions',
+            'photos_permission_check' => 'Photos Permission',
+            'emergencyforename' => 'Emergency Contact Forename',
+            'emergencysurname' => 'Emergency Contact Surname',
+            'emergencyemail' => 'Emergency Contact Email',
+            'emergencycontact' => 'Emergency Contact Number',
         ];
 
-        $paymentMethods = [
-            0 => 'Full Payment after deposit',
-            1 => 'Two Instalments after deposit',
-            2 => 'Monthly Payments (Exceptional Grounds)'
-        ];
+        $mail_body = '
+        <div style="font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px;">
+            <h2 style="color: #0D6EFD; text-align: center;">Registration Details</h2>
+            <p style="text-align: center;">Please review the registration information below:</p>
+            <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
+                <tr style="background-color: #f7f7f7;">
+                    <th style="padding: 10px; text-align: left; border: 1px solid #ddd;">Field</th>
+                    <th style="padding: 10px; text-align: left; border: 1px solid #ddd;">Details</th>
+                </tr>';
 
-
-
-        $mail_body = "<html><head><style>
-        body { font-family: Arial, sans-serif; }
-        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-        table { width: 100%; border-collapse: collapse; }
-        th, td { padding: 10px; text-align: left; border-bottom: 1px solid #ddd; }
-        th { background-color: #f7f7f7; }
-    </style></head><body>";
-        $mail_body .= "<div class='container'>";
-        $mail_body .= "<h2 style='text-align: center; margin-bottom: 20px;'>Please check the following registration</h2>";
-        $mail_body .= "<table>";
         foreach ($inputs as $field_name => $field_value) {
-            if ($field_name === 'payMethod' && isset($paymentMethods[$field_value])) {
-                $field_value = $paymentMethods[$field_value];
-            }
             $label = isset($fieldLabels[$field_name]) ? $fieldLabels[$field_name] : $field_name;
-            $mail_body .= "<tr><th>$label</th><td>$field_value</td></tr>";
+            $mail_body .= '
+                <tr>
+                    <td style="padding: 8px; border: 1px solid #ddd;">' . htmlspecialchars($label) . '</td>
+                    <td style="padding: 8px; border: 1px solid #ddd;">' . nl2br(htmlspecialchars($field_value)) . '</td>
+                </tr>';
         }
-        $mail_body .= "</table>";
-        $mail_body .= "</div>";
-        $mail_body .= "</body></html>";
-        $this->email->from('info@rawdah.cloud', 'The Rawḍah Madrasah');
 
+        $mail_body .= '
+            </table>
+            <br>
+            <p style="text-align: center;">Thank you for your attention.</p>
+            <p style="text-align: center;"><b>Regards,</b><br>The Rawḍah Madrasah Team</p>
+        </div>';
 
+        // $this->email->from('info@rawdah.cloud', 'The Rawḍah Madrasah');
+        $this->email->from('zaidkhurshid525@gmail.com', 'The Rawḍah Madrasah');
         $this->email->to($toMail);
-        $this->email->subject('The Rawdah Madrassah');
+        $this->email->subject('Registration Submission - Rawḍah Madrasah');
         $this->email->message($mail_body);
         $this->email->set_mailtype("html");
 
         $this->email->send();
-
-        // print_r($mail_body);
     }
+
 
 
     public function complaintsubmit()
     {
         $this->load->library('email');
         $postsdata = $this->input->post();
-        $recaptcha_secret = "6LfOBdUpAAAAAGDZ-EP_9ERtbCGcyprWr2Bq7yDz";
+        $recaptcha_secret = "6LfQsOoqAAAAADO5tLrUVSHoVl0UK5rrJP-VOIhj";
         $response = $_POST['g-recaptcha-response'];
         $remoteip = $_SERVER['REMOTE_ADDR'];
         $url = "https://www.google.com/recaptcha/api/siteverify?secret=$recaptcha_secret&response=$response&remoteip=$remoteip";
@@ -728,13 +793,10 @@ class Home extends CI_Controller
         }
         unset($postsdata['g-recaptcha-response']);
         $inputs = $postsdata;
-        $toMail = 'admin@rawdahmadrasah.co.uk';
-        if ($inputs['class'] == "mustafa") {
-            $toMail = 'admin@rawdahmadrasah.co.uk';
-        } else {
 
-            $toMail = 'rawda@greensvilletrust.org';
-        }
+
+        // $toMail = ($inputs['class'] == "mustafa") ? 'admin@rawdahmadrasah.co.uk' : 'rawda@greensvilletrust.org';
+        $toMail = 'zaidkhurshid525@gmail.com';
         $fieldLabels = [
             'class' => 'Class',
             'yourname' => 'Your Name',
@@ -744,44 +806,51 @@ class Home extends CI_Controller
             'postalcode' => 'Postal Code',
             'daytimephonenumberMM' => 'Daytime Phone Number',
             'eveningphonenumberMM' => 'Evening Phone Number',
-            'details' => 'Details of complaint',
-            'detailsaction' => 'Details of taken action'
+            'details' => 'Details of Complaint',
+            'detailsaction' => 'Details of Taken Action'
         ];
 
-        $mail_body = "<html><head><style>
-        body { font-family: Arial, sans-serif; }
-        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-        table { width: 100%; border-collapse: collapse; }
-        th, td { padding: 10px; text-align: left; border-bottom: 1px solid #ddd; }
-        th { background-color: #f7f7f7; }
-    </style></head><body>";
-        $mail_body .= "<div class='container'>";
-        $mail_body .= "<h2 style='text-align: center; margin-bottom: 20px; color: rgb(80,0,80);'>Please check the following complaint</h2>";
-        $mail_body .= "<table>";
+        $mail_body = '
+            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px;">
+                <h2 style="color: #0D6EFD; text-align: center;">Complaint Submission Details</h2>
+                <p style="text-align: center;">Please check the following complaint:</p>
+                <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
+                    <tr style="background-color: #f7f7f7;">
+                        <th style="padding: 10px; text-align: left; border: 1px solid #ddd; color: #333;">Field</th>
+                        <th style="padding: 10px; text-align: left; border: 1px solid #ddd; color: #333;">Details</th>
+                    </tr>';
+
         foreach ($inputs as $field_name => $field_value) {
             $label = isset($fieldLabels[$field_name]) ? $fieldLabels[$field_name] : $field_name;
-            $mail_body .= "<tr><th style='color:black;'>$label</th><td style='color:black;'>$field_value</td></tr>";
+            $mail_body .= '
+                    <tr>
+                        <td style="padding: 8px; border: 1px solid #ddd; color: #555;">' . htmlspecialchars($label) . '</td>
+                        <td style="padding: 8px; border: 1px solid #ddd; color: #555;">' . nl2br(htmlspecialchars($field_value)) . '</td>
+                    </tr>';
         }
-        $mail_body .= "</table>";
-        $mail_body .= "</div>";
-        $mail_body .= "</body></html>";
 
+        $mail_body .= '
+                </table>
+                <br>
+                <p style="text-align: center;">Thank you for your attention.</p>
+                <p style="text-align: center;"><b>Regards,</b><br>The Rawḍah Madrasah Team</p>
+            </div>';
 
-        $this->email->from('info@rawdah.cloud', 'The Rawḍah Madrasah');
-
+        // $this->email->from('info@rawdah.cloud', 'The Rawḍah Madrasah');
+        $this->email->from('zaidkhurshid525@gmail.com', 'The Rawḍah Madrasah');
         $this->email->to($toMail);
-        $this->email->subject('Complaint');
+        $this->email->subject('Complaint Submission - Rawḍah Madrasah');
         $this->email->message($mail_body);
         $this->email->set_mailtype("html");
 
-        $check = $this->email->send();
-        if ($check) {
+        if ($this->email->send()) {
             $data1['success'] = true;
-            $data1['message'] = 'Complain Submitted Successfully';
+            $data1['message'] = 'Complaint Submitted Successfully';
             echo json_encode($data1);
-            return;
         } else {
-            echo 'Error: ' . $this->email->print_debugger();
+            $data1['success'] = false;
+            $data1['message'] = 'Failed to submit complaint, please try again later.';
+            echo json_encode($data1);
         }
     }
 

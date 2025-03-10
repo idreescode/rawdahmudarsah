@@ -1256,20 +1256,30 @@
 
 
 <script>
-    $('#parent2adresscheck').click(function(){
-        if($(this).prop('checked')){
-            $('.parent2adressdiv').addClass('d-none');
-        }
-        else{
-            $('.parent2adressdiv').removeClass('d-none');
+    $('#parent2adresscheck').click(function() {
+        if ($(this).prop('checked')) {
+            // $('.parent2adressdiv').addClass('d-none');
+            $('input[name=Guardian2_address]').val($('input[name=ChildAddress]').val());
+            $('input[name=Guardian2_City]').val($('input[name=ChildCity]').val());
+            $('input[name=Guardian2_postcode]').val($('input[name=ChildPostCode]').val());
+        } else {
+            // $('.parent2adressdiv').removeClass('d-none');
+            $('input[name=Guardian2_address]').val('');
+            $('input[name=Guardian2_City]').val('');
+            $('input[name=Guardian2_postcode]').val('');
         }
     });
-    $('#parent1adresscheck').click(function(){
-        if($(this).prop('checked')){
-            $('.parent1adressdiv').addClass('d-none');
-        }
-        else{
-            $('.parent1adressdiv').removeClass('d-none');
+    $('#parent1adresscheck').click(function() {
+        if ($(this).prop('checked')) {
+            // $('.parent1adressdiv').addClass('d-none');
+            $('input[name=Guardian1_address]').val($('input[name=ChildAddress]').val());
+            $('input[name=Guardian1_City]').val($('input[name=ChildCity]').val());
+            $('input[name=Guardian1_postcode]').val($('input[name=ChildPostCode]').val());
+        } else {
+            // $('.parent1adressdiv').removeClass('d-none');
+            $('input[name=Guardian1_address]').val('');
+            $('input[name=Guardian1_City]').val('');
+            $('input[name=Guardian1_postcode]').val('');
         }
     });
     // $('#parent2adresscheck').click(function(){

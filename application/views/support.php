@@ -96,7 +96,7 @@
                             </div>
                             <div class="col-md-6">
                                 <!-- <div class="form-group"> -->
-                                <div class="g-recaptcha" data-sitekey="6LfOBdUpAAAAADp7CJoC1HIf6OTauJlLs19vCFC_"></div>
+                                <div class="g-recaptcha" data-sitekey="6LfQsOoqAAAAAIKTEZn-s-7veA3WtJc9z2ercGzS"></div>
                                 <!-- </div> -->
                             </div>
 
