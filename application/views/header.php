@@ -141,8 +141,8 @@
                                 </a>
                             </li> -->
                             
-                            <li class="nav-btn-item no-xsm"><a href="https://rawdah.cloud/site/login/" target="_blank" class="btn btn-primary btn-nav">Staff</a></li>                            
-                            <li class="nav-btn-item d-none"><a href="https://rawdah.cloud/site/userlogin/" target="_blank" class="btn btn-primary btn-nav">Parents/Students</a></li>
+                            <li class="nav-btn-item no-xsm"><a href="https://www.rawdah.cloud/login/" target="_blank" class="btn btn-primary btn-nav">Staff</a></li>                            
+                            <li class="nav-btn-item d-none"><a href="https://www.rawdah.cloud/userlogin/" target="_blank" class="btn btn-primary btn-nav">Parents/Students</a></li>
                         </ul>
                     </div>
                     <div class="hamburger">
