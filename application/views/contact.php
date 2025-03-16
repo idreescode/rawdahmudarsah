@@ -83,7 +83,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-12">
-                                                    <div class="g-recaptcha" data-sitekey="6LdSSfAqAAAAABTh_aUc0ycQ17dZuqMl3qGLfpM4"></div>
+                                                    <div class="g-recaptcha" data-sitekey="6LcoFPYqAAAAAEfpi7VJhf6kOuHnazbc5QaX4GGr"></div>
                                                 </div>
                                                 <div class="col-12">
                                                     <button type="submit" class="btn btn-primary submitbtn">Send</button>
@@ -147,7 +147,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-12">
-                                                    <div class="g-recaptcha" data-sitekey="6LdSSfAqAAAAABTh_aUc0ycQ17dZuqMl3qGLfpM4"></div>
+                                                    <div class="g-recaptcha" data-sitekey="6LcoFPYqAAAAAEfpi7VJhf6kOuHnazbc5QaX4GGr"></div>
                                                 </div>
                                                 <div class="col-12 text-center">
                                                     <button type="submit" class="btn btn-primary submitbtn">Send</button>

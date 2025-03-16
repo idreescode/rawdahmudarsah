@@ -1023,7 +1023,7 @@
                                         <div style="display:flex; margin:auto;">
                                             <!-- <p class="text-danger">Please fill the captcha*</p> -->
                                             <!-- <div class="g-recaptcha"style="display:flex; margin:auto;" data-sitekey="6Ldx_bspAAAAAIZvuUma-ifE97wkDwnxvU17x_lw"></div> -->
-                                            <div class="g-recaptcha" style="display:flex; margin:auto;" data-sitekey="6LcSQfAqAAAAAABaFPevRxZatb_BQyvYDUlQlD-D"></div>
+                                            <div class="g-recaptcha" style="display:flex; margin:auto;" data-sitekey="6LcoFPYqAAAAAEfpi7VJhf6kOuHnazbc5QaX4GGr"></div>
                                         </div>
 
                                     </div>

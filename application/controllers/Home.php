@@ -142,7 +142,7 @@ class Home extends CI_Controller
         $this->load->library('email');
         $inputs = $this->input->post();
 
-        $recaptcha_secret = "6LdSSfAqAAAAANAlWgyOZunpEtK5JvXXHc6ZYuA1";
+        $recaptcha_secret = "6LcoFPYqAAAAAAKpsSbgzgYDbvyO3oCYA8XVKbMo";
         $response = $_POST['g-recaptcha-response'];
         $remoteip = $_SERVER['REMOTE_ADDR'];
         $url = "https://www.google.com/recaptcha/api/siteverify?secret=$recaptcha_secret&response=$response&remoteip=$remoteip";
@@ -235,7 +235,7 @@ class Home extends CI_Controller
         $this->load->model('Contact_queries_model');
 
         $inputs = $this->input->post();
-        $recaptcha_secret = "6LdSSfAqAAAAANAlWgyOZunpEtK5JvXXHc6ZYuA1";
+        $recaptcha_secret = "6LcoFPYqAAAAAAKpsSbgzgYDbvyO3oCYA8XVKbMo";
         $response = $_POST['g-recaptcha-response'];
         $remoteip = $_SERVER['REMOTE_ADDR'];
         $url = "https://www.google.com/recaptcha/api/siteverify?secret=$recaptcha_secret&response=$response&remoteip=$remoteip";
@@ -337,7 +337,7 @@ class Home extends CI_Controller
         // echo"<pre>";
         // print_r($inputs);exit;
 
-        $recaptcha_secret = "6LdSSfAqAAAAANAlWgyOZunpEtK5JvXXHc6ZYuA1";
+        $recaptcha_secret = "6LcoFPYqAAAAAAKpsSbgzgYDbvyO3oCYA8XVKbMo";
         $response = $_POST['g-recaptcha-response'];
         $remoteip = $_SERVER['REMOTE_ADDR'];
         $url = "https://www.google.com/recaptcha/api/siteverify?secret=$recaptcha_secret&response=$response&remoteip=$remoteip";
@@ -771,7 +771,7 @@ class Home extends CI_Controller
     {
         $this->load->library('email');
         $postsdata = $this->input->post();
-        $recaptcha_secret = "6LdSSfAqAAAAANAlWgyOZunpEtK5JvXXHc6ZYuA1";
+        $recaptcha_secret = "6LcoFPYqAAAAAAKpsSbgzgYDbvyO3oCYA8XVKbMo";
         $response = $_POST['g-recaptcha-response'];
         $remoteip = $_SERVER['REMOTE_ADDR'];
         $url = "https://www.google.com/recaptcha/api/siteverify?secret=$recaptcha_secret&response=$response&remoteip=$remoteip";
